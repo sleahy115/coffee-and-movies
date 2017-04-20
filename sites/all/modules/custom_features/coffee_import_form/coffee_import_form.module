@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the Coffee Import Form feature.
+ */
+
+include_once 'coffee_import_form.features.inc';
