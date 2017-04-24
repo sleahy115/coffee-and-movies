@@ -1,0 +1,5 @@
+name = Groceries
+description = Shop for these
+package = Epicodus Practice
+core = 7.x
+files[] = groceries.module

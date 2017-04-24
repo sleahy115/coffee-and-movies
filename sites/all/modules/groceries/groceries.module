@@ -1,0 +1,55 @@
+<?php
+function groceries_menu() {
+    $items = array();
+    $items['groceries'] = array(
+        'title' => "Cameron's Grocery Shopping",
+        'page callback' => 'groceries_display',
+        'access callback' => TRUE,
+        'type' => MENU_NORMAL_ITEM,
+        );
+    return $items;
+}
+
+function groceries_display() {
+    $groceries=[];
+    $groceries['Eggs'] = array(
+        'price' => '1.99',
+        'unit' => 'dozen',
+        'units_to_buy' => '3',
+    );
+    $groceries['Milk'] = array(
+        'price' => '2.89',
+        'unit' => 'half gallon',
+        'units_to_buy' => '2',
+    );
+    $groceries['Bread'] = array(
+        'price' => '3.99',
+        'unit' => 'loaf',
+        'units_to_buy' => '1',
+    );
+
+    $output = '
+        <h3>Groceries to Get</h3>
+        <table>
+            <tr>
+                <th>Grocery</th>
+                <th>Unit</th>
+                <th>Expected Price Per Unit</th>
+                <th>Quantity</th>
+            </tr>';
+
+    foreach ($groceries as $key => $value) {
+        $output .= '
+            <tr>
+                <th>'.$key.'</th>
+                <th>'.$value['unit'].'</th>
+                <th>'.$value['price'].'</th>
+                <th>'.$value['units_to_buy'].'</th>
+            </tr>';
+    }
+
+    $output .= '
+        </table>';
+
+    return $output;
+}
