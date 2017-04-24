@@ -1,0 +1,23 @@
+<?php
+function pet_menu() {
+    $items = array();
+    $items['pet'] = array(
+        'title' => "Cameron's Daily Pet",
+        'page callback' => 'pet_display',
+        'access callback' => TRUE,
+        'type' => MENU_NORMAL_ITEM,
+        );
+    return $items;
+}
+
+function pet_display() {
+    return '
+    <ul>
+        <li>Kit Kat</li>
+        <li>Dogwog</li>
+        <li>"Let\'s use the sofa!"</li>
+    </ul>
+    <img src="./sites/all/modules/pet/Trillium_Poncho_cat_dog.jpg" alt="Pet Cat and Dog" width="200">
+
+    ';
+}

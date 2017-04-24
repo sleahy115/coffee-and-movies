@@ -1,0 +1,5 @@
+name = Pet
+description = About a pet
+package = Epicodus Practice
+core = 7.x
+files[] = pet.module
