@@ -1,0 +1,5 @@
+name = Labroutes
+description = Working with routes as Epicodus Lab
+package = Epicodus Practice
+core = 7.x
+files[] = labroutes.module
