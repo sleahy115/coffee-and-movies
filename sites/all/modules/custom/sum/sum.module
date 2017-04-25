@@ -37,11 +37,15 @@ function sum_form() {
          '#title' => 'Left number',
          '#type' => 'textfield',
          '#description' => t('Please enter your starting number.'),
+         '#element_validate' => array('element_validate_number', 'sum_validate_range'),
+         '#required' => TRUE,
      );
      $form['right_number'] = array(
          '#title' => 'Right number',
          '#type' => 'textfield',
          '#description' => t('Please enter a number to add to the starting number.'),
+         '#element_validate' => array('element_validate_number', 'sum_validate_range'),
+         '#required' => TRUE,
      );
      $form['submit'] = array(
          '#type' => 'submit',
@@ -49,6 +53,12 @@ function sum_form() {
      );
 
      return $form;
+ }
+
+ function sum_validate_range($element) {
+     if ($element['#value'] > 50 || $element['#value'] < -50) {
+         form_error($element, t($element['#title']. ' must be less than 50 or greater than -50.'));
+     }
  }
 
 /**
