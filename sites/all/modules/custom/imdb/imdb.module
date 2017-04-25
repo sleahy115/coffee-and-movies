@@ -42,6 +42,10 @@ function imdb_form() {
     return $form;
 }
 
+
+/**
+ * Implements hook_form_submit().
+ */
 function imdb_form_submit($form, &$form_state) {
     $title_words = $form_state['values']['title_words'];
     $_SESSION['imdb_title_words'] = $title_words;
@@ -50,7 +54,7 @@ function imdb_form_submit($form, &$form_state) {
 
 function imdb_success() {
     $title_words = $_SESSION['imdb_title_words'];
-    $title_query = array('s' => $title_words);
+    $title_query = array('s' => $title_words, 'page' => 1);
     $api_call = 'http://www.omdbapi.com/?' . http_build_query($title_query);
     $result_string = file_get_contents($api_call);
     $result_array = json_decode($result_string, TRUE);
@@ -61,12 +65,18 @@ function imdb_success() {
 
     $output = '';
 
-    for ($i=0; $i < (int) $result_array['totalResults']; $i++) {
+    for ($i=0; $i < count($result_array['Search']); $i++) {
         $output .= '<h2>' . $result_array['Search'][$i]['Title'] . '</h2>';
         $output .= '<h3>' . $result_array['Search'][$i]['Year'] . '</h3>';
+        $output .= '<h3>' . $result_array['Search'][$i]['Type'] . '</h3>';
         $output .= '<h3>' . $result_array['Search'][$i]['imdbID'] . '</h3>';
         $output .= '<hr>';
     }
+
+    $output .= '<h3>Total Results Available: ' . $result_array['totalResults'] . '</h3>';
+    $output .= '<h3>Json</h3>';
+
+    $output .= '<textarea>' . $result_string . '</textarea>';
 
     return $output;
 }
