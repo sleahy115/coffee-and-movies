@@ -1,0 +1,72 @@
+<?php
+/**
+ * @file
+ * Epicodus Lab to use IMDB API to search movie titles.
+ */
+
+ /**
+  * Implements hook_menu().
+  */
+function imdb_menu() {
+    $items['search_imdb'] = array(
+        'title' => 'Search Movies',
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array('imdb_form'),
+        'access callback' => TRUE,
+        'type' => MENU_NORMAL_ITEM,
+    );
+    $items['imdb_sucess_page'] = array(
+        'title' => 'IMDB Results',
+        'page callback' => 'imdb_success',
+        'access callback' => TRUE,
+        'type' => MENU_CALLBACK,
+    );
+
+    return $items;
+}
+
+/**
+ * Implements hook_form().
+ */
+function imdb_form() {
+    $form['title_words'] = array(
+        '#title' => 'Title',
+        '#type' => 'textfield',
+        '#description' => t('Enter movie title.'),
+        '#required' => TRUE,
+    );
+    $form['submit'] = array(
+        '#type' => 'submit',
+        '#value' => 'Search IMDB for movie',
+    );
+    return $form;
+}
+
+function imdb_form_submit($form, &$form_state) {
+    $title_words = $form_state['values']['title_words'];
+    $_SESSION['imdb_title_words'] = $title_words;
+    $form_state['redirect'] = 'imdb_sucess_page';
+}
+
+function imdb_success() {
+    $title_words = $_SESSION['imdb_title_words'];
+    $title_query = array('s' => $title_words);
+    $api_call = 'http://www.omdbapi.com/?' . http_build_query($title_query);
+    $result_string = file_get_contents($api_call);
+    $result_array = json_decode($result_string, TRUE);
+
+    if ($result_array['Response'] === 'False') {
+        return '<h1>No Results for your query!</h1>';
+    }
+
+    $output = '';
+
+    for ($i=0; $i < (int) $result_array['totalResults']; $i++) {
+        $output .= '<h2>' . $result_array['Search'][$i]['Title'] . '</h2>';
+        $output .= '<h3>' . $result_array['Search'][$i]['Year'] . '</h3>';
+        $output .= '<h3>' . $result_array['Search'][$i]['imdbID'] . '</h3>';
+        $output .= '<hr>';
+    }
+
+    return $output;
+}

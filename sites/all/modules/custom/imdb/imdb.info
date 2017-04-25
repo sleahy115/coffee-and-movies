@@ -1,0 +1,5 @@
+name = ImDB
+description = Displays information about searched movie titles.
+package = Ben and J's project
+core = 7.x
+files[] = imdb.module
