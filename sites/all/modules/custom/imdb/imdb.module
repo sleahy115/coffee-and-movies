@@ -48,8 +48,8 @@ function imdb_form() {
  */
 function imdb_page_form() {
   $form['first'] = array(
-    '#type' => 'submit',
-    '#value' => 'First Page of Movies',
+        '#type' => 'submit',
+        '#value' => 'First Page of Movies',
     );
     $form['next'] = array(
         '#type' => 'submit',
@@ -60,8 +60,8 @@ function imdb_page_form() {
         '#value' => 'Previous Page of Movies',
     );
     $form['last'] = array(
-      '#type' => 'submit',
-      '#value' => 'Last Page of Movies',
+        '#type' => 'submit',
+        '#value' => 'Last Page of Movies',
     );
     return $form;
 }
@@ -85,17 +85,19 @@ function imdb_page_form_submit($form, &$form_state) {
     $number_of_results = $_SESSION['total_results'];
     $number_per_page = 10;
     $div =  ceil($number_of_results / $number_per_page);
+
     if($button_name === 'First Page of Movies') {
-      $_SESSION['imdb_page'] = 1;
+        $_SESSION['imdb_page'] = 1;
     } else if ($button_name === 'Next Page of Movies') {
-      $_SESSION['imdb_page'] = min($div, $_SESSION['imdb_page'] + 1);
+        $_SESSION['imdb_page'] = min($div, $_SESSION['imdb_page'] + 1);
     } else if ($button_name === 'Previous Page of Movies') {
-      $_SESSION['imdb_page'] = max(1, $_SESSION['imdb_page']- 1);
+        $_SESSION['imdb_page'] = max(1, $_SESSION['imdb_page']- 1);
     } else if ($button_name === 'Last Page of Movies') {
-      $_SESSION['imdb_page'] = $div;
+        $_SESSION['imdb_page'] = $div;
     }
-      $form_state['redirect'] = 'imdb_sucess_page';
-      watchdog('imdb', $form_state['clicked_button']['#value']);
+
+    $form_state['redirect'] = 'imdb_sucess_page';
+    watchdog('imdb', $form_state['clicked_button']['#value']);
 }
 
 function imdb_success() {
@@ -122,7 +124,7 @@ function imdb_success() {
 
        $output .= $output?'<hr>':'';
 
-$movie_html=<<<EOD
+       $movie_html=<<<EOD
        <h2>{$result_array['Search'][$i]['Title']}</h2>
        <h3>{$result_array['Search'][$i]['Year']}</h3>
        <h3>{$result_array['Search'][$i]['Type']}</h3>
