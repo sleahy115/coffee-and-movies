@@ -47,9 +47,21 @@ function imdb_form() {
  * Implements hook_form().
  */
 function imdb_page_form() {
-    $form['submit'] = array(
+  $form['first'] = array(
+    '#type' => 'submit',
+    '#value' => 'First Page of Movies',
+    );
+    $form['next'] = array(
         '#type' => 'submit',
         '#value' => 'Next Page of Movies',
+    );
+    $form['previous'] = array(
+        '#type' => 'submit',
+        '#value' => 'Previous Page of Movies',
+    );
+    $form['last'] = array(
+      '#type' => 'submit',
+      '#value' => 'Last Page of Movies',
     );
     return $form;
 }
@@ -63,16 +75,27 @@ function imdb_form_submit($form, &$form_state) {
     $_SESSION['imdb_title_words'] = $title_words;
     $_SESSION['imdb_page'] = 1;
     $form_state['redirect'] = 'imdb_sucess_page';
-    watchdog('imdb', 'imdb_form_submit');
 }
 
 /**
  * Implements hook_form_submit().
  */
 function imdb_page_form_submit($form, &$form_state) {
-    $_SESSION['imdb_page'] = $_SESSION['imdb_page'] + 1;
-    $form_state['redirect'] = 'imdb_sucess_page';
-    watchdog('imdb', 'imdb_page_form_submit');
+    $button_name = $form_state['clicked_button']['#value'];
+    $number_of_results = $_SESSION['total_results'];
+    $number_per_page = 10;
+    $div =  ceil($number_of_results / $number_per_page);
+    if($button_name === 'First Page of Movies') {
+      $_SESSION['imdb_page'] = 1;
+    } else if ($button_name === 'Next Page of Movies') {
+      $_SESSION['imdb_page'] = min($div, $_SESSION['imdb_page'] + 1);
+    } else if ($button_name === 'Previous Page of Movies') {
+      $_SESSION['imdb_page'] = max(1, $_SESSION['imdb_page']- 1);
+    } else if ($button_name === 'Last Page of Movies') {
+      $_SESSION['imdb_page'] = $div;
+    }
+      $form_state['redirect'] = 'imdb_sucess_page';
+      watchdog('imdb', $form_state['clicked_button']['#value']);
 }
 
 function imdb_success() {
@@ -82,6 +105,7 @@ function imdb_success() {
     $api_call = 'http://www.omdbapi.com/?' . http_build_query($title_query);
     $result_string = file_get_contents($api_call);
     $result_array = json_decode($result_string, TRUE);
+    $_SESSION['total_results'] = $result_array['totalResults'];
 
     if ($result_array['Response'] === 'False') {
         return '<h1>No Results for your query!</h1>';
@@ -111,8 +135,8 @@ EOD;
        $output .= $movie_html;
     }
 
-    $button_output = drupal_get_form('imdb_page_form');
-    $output .= drupal_render($button_output);
+    $next_button_output = drupal_get_form('imdb_page_form');
+    $output .= drupal_render($next_button_output);
     // $output .= '<h3>Total Results Available: ' . $result_array['totalResults'] . '</h3>';
     // $output .= '<h3>API Call: ' . $api_call . '</h3>';
     // $output .= '<h3>Json</h3>';
