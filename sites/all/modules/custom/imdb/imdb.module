@@ -97,13 +97,18 @@ function imdb_success() {
        $id_result_array = json_decode($id_result_string, TRUE);
 
        $output .= $output?'<hr>':'';
-       $output .= '<h2>' . $result_array['Search'][$i]['Title'] . '</h2>';
-       $output .= '<h3>' . $result_array['Search'][$i]['Year'] . '</h3>';
-       $output .= '<h3>' . $result_array['Search'][$i]['Type'] . '</h3>';
-       $output .= '<h3>' . $id_result_array['Director'] . '</h3>';
-       $output .= '<h3>' . $id_result_array['Plot'] . '</h3>';
-       $output .= '<h3>' . $id_result_array['Awards'] . '</h3>';
-       $output .= '<h3>' . $id_result_array['imdbRating'] . '</h3>';
+
+$movie_html=<<<EOD
+       <h2>{$result_array['Search'][$i]['Title']}</h2>
+       <h3>{$result_array['Search'][$i]['Year']}</h3>
+       <h3>{$result_array['Search'][$i]['Type']}</h3>
+       <h3>{$id_result_array['Director']}</h3>
+       <h3>{$id_result_array['Plot']}</h3>
+       <h3>{$id_result_array['Awards']}</h3>
+       <h3>{$id_result_array['imdbRating']}</h3>
+EOD;
+
+       $output .= $movie_html;
     }
 
     $button_output = drupal_get_form('imdb_page_form');
